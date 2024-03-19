@@ -23,12 +23,21 @@ git clone https://github.com/your-username/temporary-file-server.git
 cd temporary-file-server
 ```
 ### Usage
-**To start the server, run:**
+**To start the backend server, run:**
 ```
-python app.py
+python backend/app/main.py
 ```
-Once the server is running, navigate to http://localhost:9501 on your web browser to access the TFS dashboard. From there, you can upload files, view available files, and download as needed.
+You can then install the React server in ```/frontend``` and access the **XTFS** from localhost:3000
+From there, you can upload files, view available files, and download as needed.
 To stop the server and remove all temporary files, send a POST request to /shutdown or simply stop the Python process.
+
+**Remember** to change the config file to include your own network IP address correctly:
+```
+const config = {
+  apiUrl: "http://useyourlocalip:9501",
+};
+export default config;
+```
 
 # Configuration
 Modify app.py to change default configurations such as port number, host, and maximum file upload size to suit your needs.
