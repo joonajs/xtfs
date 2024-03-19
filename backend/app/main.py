@@ -7,6 +7,7 @@ import os
 import logging
 from flask import Flask, request, send_from_directory, render_template, abort
 from werkzeug.utils import secure_filename
+from flask_cors import CORS
 
 logging.basicConfig(level=logging.INFO)
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'apk',
@@ -22,6 +23,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'apk',
                       'zip', 'tar', 'rar', 'gz', 'bz2', '7z', 'xz', 'pdf', 'epub', 'zip', 'webp'
                       }
 app = Flask(__name__)
+CORS(app)
 
 temp_dir = tempfile.mkdtemp()
 logging.info('Temporary directory created at %s', temp_dir)
@@ -75,12 +77,20 @@ def list_files():
     
 
 
-@app.route('/files/<filename>', methods=['GET'])
-def get_file(filename):
+@app.route('/files/<filename>', methods=['GET', 'DELETE'])  # Notice the corrected methods definition
+def file_operations(filename):
     safe_filename = secure_filename(filename)
-    if not os.path.exists(os.path.join(temp_dir, safe_filename)):
-        abort(404)
-    return send_from_directory(temp_dir, safe_filename)
+    file_path = os.path.join(temp_dir, safe_filename)
+
+    if not os.path.exists(file_path):
+        abort(404)  # If the file does not exist, return a 404 error
+
+    if request.method == 'DELETE':
+        os.remove(file_path)  # Remove the file
+        return {'message': f'{safe_filename} deleted'}, 200  # Return a confirmation message
+
+    return send_from_directory(temp_dir, safe_filename)  # For GET, send the file
+
 
 
 @app.route('/shutdown', methods=['POST'])

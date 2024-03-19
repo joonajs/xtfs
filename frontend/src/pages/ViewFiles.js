@@ -29,6 +29,8 @@ export default function ViewFiles() {
       .catch((error) => console.error("Error:", error));
   }, []);
 
+  
+
   return (
     <Stack
       tokens={{ childrenGap: 10 }}
@@ -49,6 +51,19 @@ export default function ViewFiles() {
               {file}
             </FluentUILink>
             <ActionButton text="Download" />
+<ActionButton 
+  text="Delete" 
+  onClick={() => fetch(`${apiUrl}/files/${file}`, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    if (response.ok) {
+      // If the deletion was successful, remove the file from the state
+      setFiles(files.filter(f => f !== file));
+    }
+  })}
+/>
+
           </Stack>
         ))}
       </Stack>
