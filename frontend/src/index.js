@@ -1,17 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import Sidebar from './components/sidebar/Sidebar';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import Sidebar from "./components/sidebar/Sidebar";
+import { FluentProvider, teamsLightTheme } from "@fluentui/react-components";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <div className=' min-h-screen bg-black text-white relative flex'>
-        <Sidebar />
-    <App />
-    </div>
+    <FluentProvider theme={teamsLightTheme} className="flex">
+      <Sidebar />
+      <App />
+    </FluentProvider>
   </React.StrictMode>
 );
 

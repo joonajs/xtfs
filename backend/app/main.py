@@ -11,7 +11,16 @@ from werkzeug.utils import secure_filename
 logging.basicConfig(level=logging.INFO)
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'apk',
                       'bin', 'bat', 'html', 'css', 'py', 'js', 'jsx', 'ts', 'md',
-                      'json',}
+                      'json', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv',
+                      'xml', 'mp3', 'mp4', 'wav', 'avi', 'mov', 'zip', 'tar', 'gz',
+                      'rar', '7z', 'exe', 'java', 'cpp', 'c', 'h', 'sh', 'bas', 'ps1',
+                      'psm1', 'psd1', 'ps1xml', 'psc1', 'pssc', 'msh', 'msh1', 'msh2',
+                      'mshxml', 'msh1xml', 'msh2xml', 'scf', 'lnk', 'inf', 'reg', 'url',
+                      'm3u', 'm4a', 'm4v', 'f4v', 'f4a', 'm4b', 'm4r', 'f4b', 'mov',
+                      'webm', 'weba', 'flv', 'ogg', 'oga', 'ogv', 'spx', 'opus', 'pdf',
+                      'epub', 'zip', 'tar', 'rar', 'gz', 'bz2', '7z', 'xz', 'pdf', 'epub',
+                      'zip', 'tar', 'rar', 'gz', 'bz2', '7z', 'xz', 'pdf', 'epub', 'zip', 'webp'
+                      }
 app = Flask(__name__)
 
 temp_dir = tempfile.mkdtemp()
@@ -49,7 +58,11 @@ def upload_file():
 def list_files():
     """List all files in the temporary directory."""
     files = os.listdir(temp_dir)
-    return {'files': files}  # Send a JSON response containing the files.
+    (total, used, free) = shutil.disk_usage(temp_dir)
+    return {'files': files, 'total': total, 'used': used, 'free': free}  # Send a JSON response containing the files.
+    """Show the space in the temporary directory & space used"""
+
+    
 
 
 @app.route('/files/<filename>', methods=['GET'])

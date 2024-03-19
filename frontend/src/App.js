@@ -1,86 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link
-} from 'react-router-dom';
-import config from './config.dev';
+// src/App.js
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { initializeIcons } from "@fluentui/react";
+import { FluentProvider, teamsLightTheme } from "@fluentui/react-components";
+import ErrorBoundary from "./components/ErrorBoundary"; // Assume this is a custom component
+import Loading from "./components/Loading"; // Assume this is a custom component
 
-function Home() {
-  return <h1>Home Page</h1>;
-}
+// Lazy load the components to improve initial load time
+const Home = lazy(() => import("./pages/Home"));
+const UploadFile = lazy(() => import("./pages/UploadFile"));
+const ViewFiles = lazy(() => import("./pages/ViewFiles"));
+const Sidebar = lazy(() => import("./components/sidebar/Sidebar"));
 
-function UploadFile() {
-  const uploadFile = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    fetch('/upload', {
-      method: 'POST',
-      body: formData,
-    })
-    .then(response => response.text())
-    .then(data => alert(data))
-    .catch(error => console.error('Error:', error));
-  };
-
-  return (
-    <div>
-      <h1>Upload Files</h1>
-      <form onSubmit={uploadFile} encType="multipart/form-data">
-        <input type="file" name="file" id="file" />
-        <button type="submit">Upload File</button>
-      </form>
-    </div>
-  );
-}
-
-function ViewFiles() {
-  const apiUrl = config.apiUrl;
-  const [files, setFiles] = useState([]);
-
-  const fetchFiles = () => {
-    fetch('/files')
-      .then(response => response.json())
-      .then(data => setFiles(data.files))
-      .catch(error => console.error('Error:', error));
-  };
-
-  useEffect(() => {
-    fetchFiles();
-  }, []);
-
-  return (
-    <div>
-      <h1>View Files</h1>
-      <ul>
-        {files.map((file, index) => (
-          <li key={index}>
-            <a href={`${apiUrl}/files/${file}`} target="_blank" rel="noopener noreferrer">{file}</a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
+// Initialize Fluent UI icons once at the top level
+initializeIcons();
 
 function App() {
   return (
     <Router>
-      <div>
-        <nav>
-          <Link to="/">Home</Link> | 
-          <Link to="/upload">Upload Files</Link> | 
-          <Link to="/files">View Files</Link>
-        </nav>
-        <Routes>
-          <Route path="/upload" element={<UploadFile />} />
-          <Route path="/files" element={<ViewFiles />} />
-          <Route path="/files/*" />
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </div>
+      <FluentProvider theme={teamsLightTheme}>
+        <ErrorBoundary>
+          <Suspense fallback={<Loading />}>
+            <div className="flex mt-5">
+              <Routes>
+                <Route path="/upload" element={<UploadFile />} />
+                <Route path="/files" element={<ViewFiles />} />
+                <Route path="/" element={<Home />} />
+              </Routes>
+            </div>
+          </Suspense>
+        </ErrorBoundary>
+      </FluentProvider>
     </Router>
   );
 }
