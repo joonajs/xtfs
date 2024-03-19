@@ -10,18 +10,28 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 
 logging.basicConfig(level=logging.INFO)
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'apk',
-                      'bin', 'bat', 'html', 'css', 'py', 'js', 'jsx', 'ts', 'md',
-                      'json', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'csv',
-                      'xml', 'mp3', 'mp4', 'wav', 'avi', 'mov', 'zip', 'tar', 'gz',
-                      'rar', '7z', 'exe', 'java', 'cpp', 'c', 'h', 'sh', 'bas', 'ps1',
-                      'psm1', 'psd1', 'ps1xml', 'psc1', 'pssc', 'msh', 'msh1', 'msh2',
-                      'mshxml', 'msh1xml', 'msh2xml', 'scf', 'lnk', 'inf', 'reg', 'url',
-                      'm3u', 'm4a', 'm4v', 'f4v', 'f4a', 'm4b', 'm4r', 'f4b', 'mov',
-                      'webm', 'weba', 'flv', 'ogg', 'oga', 'ogv', 'spx', 'opus', 'pdf',
-                      'epub', 'zip', 'tar', 'rar', 'gz', 'bz2', '7z', 'xz', 'pdf', 'epub',
-                      'zip', 'tar', 'rar', 'gz', 'bz2', '7z', 'xz', 'pdf', 'epub', 'zip', 'webp'
-                      }
+ALLOWED_EXTENSIONS = {
+    # Text files
+    'txt', 'pdf', 'md', 'json', 'csv', 'xml', 'html', 'css',
+    # Programming and markup languages
+    'py', 'js', 'jsx', 'ts', 'java', 'cpp', 'c', 'h', 'sh', 'bas', 'ps1', 'psm1', 'psd1',
+    'ps1xml', 'psc1', 'pssc', 'msh', 'msh1', 'msh2', 'mshxml', 'msh1xml', 'msh2xml',
+    # Office formats
+    'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
+    # Image formats
+    'png', 'jpg', 'jpeg', 'gif', 'webp', 'psd', 'epub',
+    # Audio formats
+    'mp3', 'wav', 'm4a', 'm4b', 'm4r', 'oga', 'opus',
+    # Video formats
+    'mp4', 'avi', 'mov', 'webm', 'flv', 'ogv', 'm4v', 'f4v', 'f4a', 'f4b',
+    # Archive formats
+    'zip', 'tar', 'gz', 'rar', '7z', 'bz2', 'xz',
+    # Executable and script formats
+    'apk', 'exe', 'bat', 'lnk', 'inf', 'reg', 'url',
+    # Other formats
+    'bin', 'scf', 'm3u', 'spx'
+}
+
 app = Flask(__name__)
 CORS(app)
 
