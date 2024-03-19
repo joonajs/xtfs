@@ -1,9 +1,13 @@
-import { Link } from "react-router-dom";
+
+import { useLocation } from 'react-router';
 import { Nav } from '@fluentui/react/lib/Nav';
 import { initializeIcons } from '@fluentui/react/lib/Icons';
+import { useTheme } from "../ThemeContext";
 
 // Initialize Fluent UI icons
 initializeIcons();
+
+
 
 const links = [
   {
@@ -16,14 +20,22 @@ const links = [
 ];
 
 const Sidebar = () => {
+  const { isDark, toggleTheme } = useTheme();
+  const location = useLocation(); // Get the current location
+
+  const selectedKey = links
+  .flatMap(group => group.links) // Flatten the links array
+  .find(link => link.url === location.pathname)?.key; // Find the link with a URL matching the current path
+
+
   return (
-    <div className="bg-neutral-100 px-1 min-h-screen flex flex-col mr-5">
-      <div className="mb-10">
-        <h1 className="text-xl text-center mt-5 font-semibold text-neutral-900">/xtfs</h1>
+    <div className={`bg-neutral-100 px-1 min-h-screen flex flex-col mr-5 ${isDark ? 'dark' : ''}`}>
+            <div className="mb-10">
+        <a href='/' className="text-xl text-center mt-5 font-semibold text-neutral-900">/xtfs</a>
       </div>
       <Nav
         groups={links}
-        selectedKey="key1"
+        selectedKey={selectedKey}
         styles={{
           root: {
             width: 150,
@@ -45,8 +57,18 @@ const Sidebar = () => {
           },
         }}
       />
+      <button
+        onClick={toggleTheme}
+        className="bg-neutral-900 text-neutral-100 px-4 py-2 rounded-md mt-5"
+      >
+        Toggle Dark Mode
+      </button>
+
     </div>
+
   );
+
 };
+
 
 export default Sidebar;

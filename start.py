@@ -1,5 +1,5 @@
 '''
-Start Frontend and Backend servers
+Start Frontend and Backend servers, made for Windows.
 '''
 
 import os
@@ -9,10 +9,13 @@ import signal
 
 
 print("[⌛] Starting the backend server")
-backend = subprocess.Popen(["flask", "run"])
+backend = subprocess.Popen(["python", "backend/app/main.py"])
 time.sleep(5)  # Give the backend server some time to start
 print("[✅] Backend server started")
 
+'''
+<--> IMPORTANT TO DO: OPEN 2 INSTANCES OF TERMINALS, ONE FOR BACKEND AND ONE FOR FRONTEND. <--> IMPORTANT
+'''
 print("[⌛] Starting the frontend server")
 frontend = subprocess.Popen(["npm", "start"], cwd="frontend")
 time.sleep(5)  # Give the frontend server some time to start

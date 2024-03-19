@@ -41,18 +41,28 @@ def catch_all(path):
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-    """Handle file upload."""
-    if 'file' not in request.files:
+    """Handle multiple file uploads."""
+    files = request.files.getlist('files')  # Get all files
+    
+    if not files:
         return 'No file part', 400
-    file = request.files['file']
-    if file.filename == '':
-        return 'No selected file', 400
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        filepath = os.path.join(temp_dir, filename)
-        file.save(filepath)
-        return 'File uploaded successfully', 200
-    return 'File type not allowed', 400
+    
+    filepaths = []  # Store file paths for response
+    
+    for file in files:
+        if file.filename == '':
+            continue  # Skip empty files
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filepath = os.path.join(temp_dir, filename)
+            file.save(filepath)
+            filepaths.append(filepath)
+    
+    if not filepaths:
+        return 'No valid files uploaded', 400
+    
+    return f'Files uploaded successfully: {", ".join(filepaths)}', 200
+
 
 @app.route('/files', methods=['GET'])
 def list_files():
