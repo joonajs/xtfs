@@ -50,17 +50,16 @@ def catch_all(path):
     else:
         return render_template("index.html")
 
-
 @app.route('/upload', methods=['POST'])
 def upload_file():
     """Handle multiple file uploads."""
     files = request.files.getlist('files')  # Get all files
-    
+
     if not files:
         return 'No file part', 400
-    
+
     filepaths = []  # Store file paths for response
-    
+
     for file in files:
         if file.filename == '':
             continue  # Skip empty files
@@ -69,10 +68,10 @@ def upload_file():
             filepath = os.path.join(temp_dir, filename)
             file.save(filepath)
             filepaths.append(filepath)
-    
+
     if not filepaths:
         return 'No valid files uploaded', 400
-    
+
     return f'Files uploaded successfully: {", ".join(filepaths)}', 200
 
 
@@ -81,10 +80,9 @@ def list_files():
     """List all files in the temporary directory."""
     files = os.listdir(temp_dir)
     (total, used, free) = shutil.disk_usage(temp_dir)
-    return {'files': files, 'total': total, 'used': used, 'free': free}  # Send a JSON response containing the files.
+    return {'files': files, 'total': total, 'used': used, 'free': free} 
+    # Send a JSON response containing the files.
     """Show the space in the temporary directory & space used"""
-
-    
 
 
 @app.route('/files/<filename>', methods=['GET', 'DELETE'])  # Notice the corrected methods definition
@@ -102,7 +100,6 @@ def file_operations(filename):
     return send_from_directory(temp_dir, safe_filename)  # For GET, send the file
 
 
-
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
     """Shut down the server."""
@@ -114,6 +111,7 @@ def shutdown():
     logging.info('Server shutting down...')
     # ALL THE DATA IS LOST HERE.
     return 'Server shutting down...', 200
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 9501))
