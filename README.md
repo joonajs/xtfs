@@ -30,6 +30,9 @@ cd xtfs
 ```
 python backend/app/main.py
 ```
+
+### You don't need to spin up the React server if not wanted.
+You can access everything needed from your local IP or localhost:9501, starting the React server is only suggested if you plan to keep the server up for longer than few minutes to exchange files.
 You can then install the React server in ```/frontend``` and access the **XTFS** from localhost:3000
 From there, you can upload files, view available files, and download as needed.
 To stop the server and remove all temporary files, send a POST request to /shutdown or simply stop the Python process.
