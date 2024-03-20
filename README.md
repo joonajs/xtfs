@@ -16,6 +16,9 @@ Ensure you have Python 3.x installed on your system. TFS uses Flask, so if you d
 ```
 pip install Flask
 ```
+```
+pip install Flask-Cors
+```
 ### Installation
 Clone the repository to your local machine:
 ```

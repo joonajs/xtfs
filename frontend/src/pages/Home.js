@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Field, ProgressBar, ProgressBarProps } from '@fluentui/react-components';
-import { PiHardDrives } from "react-icons/pi";
+
 export default function Home() {
   // Initialize state variables to hold the fetched data
   const [total, setTotal] = useState('0');
@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <div className="m-5 min-w-full">
       <div className='border border-gray-300 p-5 w-full'>
-        <h1 className="text-sm font-semibold"><PiHardDrives className='text-5xl' /> Hard Drive:</h1>
+        <h1 className="text-sm font-semibold">Hard Drive:</h1>
         <p className="text-sm">/dev/sda</p> {/* Assuming this is static */}
         <h1 className="text-sm font-semibold">File System:</h1>
         <p className="text-sm">ext4</p> {/* Assuming this is static */}
