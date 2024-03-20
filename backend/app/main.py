@@ -58,7 +58,7 @@ def catch_all(path):
     if path != "" and os.path.exists("static/" + path):
         return send_from_directory('static', path)
     else:
-        return render_template("index.html")
+        return render_template("home.html")
 
 @app.route('/upload', methods=['POST'])
 def upload_file():

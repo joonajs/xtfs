@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Storage Information</title>
+    <style>
+        .container {
+            margin: 20px;
+            width: 100%;
+        }
+        .box, .upload-section, .files-section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .title {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #eee;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #0078d4;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .file-link {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class='box'>
+            <h1 class="title">Server:</h1>
+            <h1 class="title">Hard Drive:</h1>
+            <p>/dev/sda</p>
+            <h1 class="title">File System:</h1>
+            <p>ext4</p>
+            <h1 class="title">Total:</h1>
+            <p id="total">0GB</p>
+            <h1 class="title">Used:</h1>
+            <p id="used">0GB</p>
+            <h1 class="title">Free:</h1>
+            <p id="free">0GB</p>
+
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar">0%</div>
+            </div>
+        </div>
+        <div class="upload-section">
+            <h1 class="title">Upload Files:</h1>
+            <form id="upload-form" enctype="multipart/form-data">
+                <input type="file" name="files" id="file" multiple class="border border-gray-300 rounded-md p-2 w-full">
+                <button type="submit">Upload File</button>
+            </form>
+        </div>
+        <div class="files-section">
+            <h1 class="title">View Files:</h1>
+            <div id="files-list"></div>
+        </div>
+    </div>
+
+    <script>
+        function fetchData() {
+            fetch("/files")
+                .then(response => response.json())
+                .then(data => {
+                    const total = (data.total / 1024 ** 3).toFixed(2);
+                    const used = (data.used / 1024 ** 3).toFixed(2);
+                    const free = (data.free / 1024 ** 3).toFixed(2);
+
+                    document.getElementById('total').textContent = `${total}GB`;
+                    document.getElementById('used').textContent = `${used}GB`;
+                    document.getElementById('free').textContent = `${free}GB`;
+
+                    const progressBar = document.getElementById('progress-bar');
+                    const usedPercentage = (Number(used) / Number(total)) * 100;
+                    progressBar.style.width = usedPercentage + '%';
+                    progressBar.textContent = usedPercentage.toFixed(2) + '%';
+
+                    const filesList = document.getElementById('files-list');
+                    filesList.innerHTML = ''; // Clear existing list
+                    data.files.forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'file-item';
+                        fileItem.innerHTML = `<a class="file-link" href="/files/${file}" target="_blank">${file}</a>
+                                              <button onclick="deleteFile('${file}')">Delete</button>`;
+                        filesList.appendChild(fileItem);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchData);
+
+        const form = document.getElementById('upload-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch("/upload", {
+                method: "POST",
+                body: formData,
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                fetchData(); // Refresh file list
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+
+        function deleteFile(fileName) {
+            fetch(`/files/${fileName}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('File deleted successfully');
+                    fetchData(); // Refresh file list
+                } else {
+                    alert('Error deleting file');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
