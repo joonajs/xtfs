@@ -22,11 +22,26 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'apk',
                       'epub', 'zip', 'tar', 'rar', 'gz', 'bz2', '7z', 'xz', 'pdf', 'epub',
                       'zip', 'tar', 'rar', 'gz', 'bz2', '7z', 'xz', 'pdf', 'epub', 'zip', 'webp'
                       }
+
+## THIS IS THE TEMPORARY DIRECTORY WHERE THE FILES WILL BE STORED.
+## IT WILL BE DELETED WHEN THE SERVER IS SHUT DOWN.
+## THE DIRECTORY IS CREATED IN THE SYSTEM'S TEMPORARY DIRECTORY
+## SO THE SPACE AVAILABLE IS EQUAL TO YOUR SYSTEM'S HARD DRIVE SPACE.
+temp_dir = os.path.join(tempfile.gettempdir(), 'xtfs_temp')
+if os.path.exists(temp_dir):
+    # REMOVES EVERYTHING IN THE TEMP DIRECTORY IF IT DIDN'T GET DELETED
+    shutil.rmtree(temp_dir)
+os.makedirs(temp_dir)
+logging.info('Temporary directory set and cleared at %s', temp_dir)    
+    
+
 app = Flask(__name__)
 CORS(app)
 
-temp_dir = tempfile.mkdtemp()
-logging.info('Temporary directory created at %s', temp_dir)
+
+
+
+
 
 def allowed_file(filename):
     """Check if the filename's extension is allowed."""
