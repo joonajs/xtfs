@@ -99,6 +99,34 @@ def file_operations(filename):
 
     return send_from_directory(temp_dir, safe_filename)  # For GET, send the file
 
+@app.route('/download/<filename>', methods=['GET'])
+def download_file(filename):
+    safe_filename = secure_filename(filename)
+    file_path = os.path.join(temp_dir, safe_filename)
+
+    if not os.path.exists(file_path):
+        abort(404)
+    
+    return send_from_directory(temp_dir, safe_filename, as_attachment=True)
+
+@app.route('/download', methods=['POST'])
+def download_files():
+    files = request.json.get('files', [])
+    if not files:
+        return 'No files to download', 400
+    
+    zip_name = 'download.zip'
+    zip_path = os.path.join(temp_dir, zip_name)
+    with shutil.zipfile.ZipFile(zip_path, 'w') as zipf:
+        for file in files:
+            file_path = os.path.join(temp_dir, file)
+            if os.path.exists(file_path):
+                zipf.write(file_path, file)
+    
+    return send_from_directory(temp_dir, zip_name, as_attachment=True)
+
+
+
 
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
