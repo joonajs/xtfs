@@ -22,8 +22,8 @@ pip install Flask-Cors
 ### Installation
 Clone the repository to your local machine:
 ```
-git clone https://github.com/your-username/temporary-file-server.git
-cd temporary-file-server
+git clone https://github.com/joonajs/xtfs.git &&
+cd xtfs
 ```
 ### Usage
 **To start the backend server, run:**
